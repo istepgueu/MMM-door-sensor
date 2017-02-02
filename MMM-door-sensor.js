@@ -28,28 +28,35 @@ Module.register("MMM-door-sensor",{
 			Log.log(this.name + " received a module notification: " + notification + " from sender: " + sender.name);
 			if (notification === "REMOTE_ACTION") {
 				this.sendSocketNotification(notification, payload);	
-			
-			var wrapper = document.createElement("div");
-                        wrapper.innerHTML = "TATA";
-                        return wrapper;
 
+				var door_state = "close.png";			
+	
+				this.updateDom();				
+			
 			}
 		} else { 
 			if (notification === "DOM_OBJECTS_CREATED") {
 				this.sendSocketNotification("REQUEST_DEFAULT_SETTINGS");
 			
-			var wrapper = document.createElement("div");
-                        wrapper.innerHTML = "TOTO";
-                        return wrapper;	
+				var door_state = "open.png";
+
+
+				this.updateDom();
+
 
 			}
 		}
-
-
 		
+		},
 
-	},
 
+		getDom: function() {
+
+		var wrapper = document.createElement("div");
+		return door_state;
+		wrapper.innerHTML = '<img id="door_state" src=' + door_state + ' width="100" height="200" />';
+		return wrapper;
+	}
 
 
 
