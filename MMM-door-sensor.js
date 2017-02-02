@@ -10,9 +10,9 @@
 Module.register("MMM-door-sensor",{
 
 	// Default module config.
-	//defaults: {
-	//	text: "Hello World!"
-	//},
+	defaults: {
+		text: "Hello World!"
+	},
 
 
 	// Define start sequence.
@@ -28,30 +28,26 @@ Module.register("MMM-door-sensor",{
 			Log.log(this.name + " received a module notification: " + notification + " from sender: " + sender.name);
 			if (notification === "REMOTE_ACTION") {
 				this.sendSocketNotification(notification, payload);	
+			
+			var wrapper = document.createElement("div");
+                        wrapper.innerHTML = "TATA";
+                        return wrapper;
+
 			}
 		} else { 
 			if (notification === "DOM_OBJECTS_CREATED") {
 				this.sendSocketNotification("REQUEST_DEFAULT_SETTINGS");
+			
+			var wrapper = document.createElement("div");
+                        wrapper.innerHTML = "TOTO";
+                        return wrapper;	
+
 			}
 		}
-	},
 
 
+		
 
-	getDom: function() {
-		var wrapper = document.createElement("div");
-
-		if (notification === "SHOW_ALERT") {
-                      wrapper.innerHTML = "TOTO";
-		}
-
-		} else {
-
-                if (notification === "HIDE_ALERT") {
-			wrapper.innerHTML = "TATA";
-		}
-
-		return wrapper;
 	},
 
 
