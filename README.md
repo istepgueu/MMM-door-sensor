@@ -1,4 +1,4 @@
-# Module: MMM-doors-sensor
+# Module: MMM-door-sensor
 The `helloworld` module is one of the default modules of the MagicMirror. It is a simple way to display a static text on the mirror.
 ## Using the module
 
