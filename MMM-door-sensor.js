@@ -25,7 +25,7 @@ Module.register("MMM-door-sensor",{
 
                 notificationReceived: function(notification, payload, sender) {
                 if (sender) {
-                        Log.log(this.name + " received a module notification: " + notification + " from se$
+                        Log.log(this.name + " received a module notification: " + notification + " from sender: " + sender.name);
                         if (notification === "DOOR_STATE") {
 
                                 this.door_state = payload;
