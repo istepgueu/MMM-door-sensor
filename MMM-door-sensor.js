@@ -1,76 +1,147 @@
 /* global Module */
 
 /* Magic Mirror
- * Module: MMM-door-sensor
+ * Module: Buttons
  *
- * By iStepgueu http://www.twitter.com/istepgueu
+ * By Joseph Bethge
  * MIT Licensed.
  */
 
-Module.register("MMM-door-sensor",{
+Module.register("MMM-Buttons", {
 
-        // Default module config.
-        defaults: {
-                text: "Hello World!"
-        },
+    requiresVersion: "2.1.0",
 
+    // Default module config.
+    defaults: {
+        buttons: [
+             {
+                   pin : 25,
+                   name: "door 1",
+            },
+            {
+                  pin : 26,
+                  name: "door 2",
+            }
+       ],
+        minShortPressTime: 0,
+        maxShortPressTime: 500,
+        minLongPressTime: 3000
+    },
 
-        // Define start sequence.
-        start: function() {
-                Log.info("Starting module: " + this.name);
+    // Define start sequence.
+    start: function() {
+        Log.info("Starting module: " + this.name);
 
-        },
+        this.sendConfig();
 
+        this.intervals = [];
+        this.alerts = [];
+        for (var i = 0; i < this.config.buttons.length; i++)
+        {
+            this.intervals.push(undefined);
+            this.alerts.push(false);
+        }
+    },
 
-		notificationReceived: function(notification, payload, sender) {
-                if (sender) {
-                        Log.log(this.name + " received a module notification: " + notification + " from sender: " + sender.name);
+    // Override dom generator.
+    getDom: function() {
+        var wrapper = document.createElement("div");
 
+        return wrapper;
+    },
 
-			if (notification === "DOOR_CLOSE_avant") {
-						this.door_state = "door_1_close.png";
-                                		 this.updateDom();   						 
+    /* sendConfig()
+     * intialize backend
+     */
+    sendConfig: function() {
+        this.sendSocketNotification("BUTTON_CONFIG", {
+            config: this.config
+        });
+    },
 
-			} else if (notification === "DOOR_OPEN_avant") {
-						this.door_state = "door_1_open.png";
-                                		 this.updateDom();
+    buttonUp: function(index, duration) {
+            var self = this;
+            this.intervals[index] = undefined;
+            clearTimeout(this.intervals[index]);
+            clearInterval(this.intervals[index]);
+          this.sendAction('DOOR_OPEN_'+ self.config.buttons[index].name);
+          /*
+        if (this.alerts[index]) {
+            // alert already shown, clear interval to update it and hide it
+            if (this.intervals[index] !== undefined) {
+                clearInterval(this.intervals[index]);
+            }
+            this.alerts[index] = false;
+            this.sendNotification("HIDE_ALERT");
+        } else {
+            // no alert shown, clear time out for showing it
+            if (this.intervals[index] !== undefined) {
+                clearTimeout(this.intervals[index]);
+            }
+        }
+        this.intervals[index] = undefined;
 
-			} else {
-			}
+        var min = this.config.minShortPressTime;
+        var max = this.config.maxShortPressTime;
+        var shortPress = this.config.buttons[index].shortPress
+        var longPress = this.config.buttons[index].longPress
 
+        if (shortPress && min <= duration && duration <= max)
+        {
+            //this.sendAction(shortPress);
+            this.sendAction('DOOR_OPEN_â€™+ self.config.buttons[index].name);
+        }
 
-			if (notification === "DOOR_CLOSE_arriere") {
-                                                this.door_state2 = "door_2_close.png";
-                                                 this.updateDom();
+        min = this.config.minLongPressTime;
+        if (longPress && min <= duration)
+        {
+            //this.sendAction(longPress);
+            this.sendAction('DOOR_OPEN_â€™+ self.config.buttons[index].name);
+        }
+        */
+    },
 
-                        } else if (notification === "DOOR_OPEN_arriere") {
-                                                this.door_state2 = "door_2_open.png";
-                                                 this.updateDom();
+    buttonDown: function(index) {
+        var self = this;
+       /*
+        if (self.config.buttons[index].longPress && self.config.buttons[index].longPress.title)
+        {
+            this.intervals[index] = setTimeout(function () {
+                self.startAlert(index);
+            }, this.config.maxShortPressTime);
+        }
+        */
+        this.sendAction('DOOR_CLOSE_'+ self.config.buttons[index].name);
+    },
 
-                        } else {
-                        }
+    sendAction(description) {
+        this.sendNotification(description, 1500);
+    },
 
+    showAlert: function (index) {
+        // display the message
+        this.sendNotification("SHOW_ALERT", {
+            title: this.config.buttons[index].longPress.title,
+            message: this.config.buttons[index].longPress.message,
+            imageFA: this.config.buttons[index].longPress.imageFA
+        });
+    },
 
+    startAlert: function(index) {
+        this.alerts[index] = true;
+        this.showAlert(index);
+    },
 
-
-                }
-
-        },
-
-
-
-                getDom: function() {
-
-                        var wrapper = document.createElement("div");
-                        if(this.door_state && this.door_state2){
-                        wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/"+this.door_state+"' width='100' />";
-			wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/"+this.door_state2+"' width='100' />";  
-			} else {
-
-			wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/door_1_blanc.png' width='100' />";
-                        wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/door_2_blanc.png' width='100' />";
-			}
-                      return wrapper;
-//		    }
-                }
+    // Override socket notification handler.
+    socketNotificationReceived: function(notification, payload) {
+        if (notification === "BUTTON_UP")
+        {
+            this.buttonUp(payload.index, payload.duration);
+        }
+        if (notification === "BUTTON_DOWN")
+        {
+            this.buttonDown(payload.index);
+        }
+    },
 });
+
