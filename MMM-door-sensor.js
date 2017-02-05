@@ -59,18 +59,18 @@ Module.register("MMM-door-sensor",{
 
 
 
-             getDom: function() {
+                getDom: function() {
 
                         var wrapper = document.createElement("div");
                         if(this.door_state){
                         wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/"+this.door_state+"' width='100' />";
-                        wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/door_2_blanc.png' width='100' />";
-                        } else {
+			wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/"+this.door_state2+"' width='100' />";  
+			} else {
 
-                        wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/door_1_blanc.png' width='100' />";
+			wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/door_1_blanc.png' width='100' />";
                         wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/door_2_blanc.png' width='100' />";
-                        }
+			}
                       return wrapper;
-//                  }
+//		    }
                 }
 });
