@@ -28,7 +28,7 @@ Module.register("MMM-door-sensor",{
 
 
 			if (notification === "DOOR_CLOSE_avant") {
-						this.door_state = "door_1_close.png";
+						this.door_state = "door_close.png";
                                 		 this.updateDom();   						 
 
 			} else if (notification === "DOOR_OPEN_avant") {
@@ -40,7 +40,7 @@ Module.register("MMM-door-sensor",{
 
 
 			if (notification === "DOOR_CLOSE_arriere") {
-                                                this.door_state2 = "door_2_close.png";
+                                                this.door_state2 = "door_close.png";
                                                  this.updateDom();
 
                         } else if (notification === "DOOR_OPEN_arriere") {
