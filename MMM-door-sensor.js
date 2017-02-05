@@ -62,7 +62,7 @@ Module.register("MMM-door-sensor",{
                 getDom: function() {
 
                         var wrapper = document.createElement("div");
-                        if(this.door_state){
+                        if(this.door_state || this.door_state2){
                         wrapper.innerHTML = "<img src='/modules/MMM-door-sensor/img/"+this.door_state+"' width='100' />";
 			wrapper.innerHTML += "<img src='/modules/MMM-door-sensor/img/"+this.door_state2+"' width='100' />";  
 			} else {
